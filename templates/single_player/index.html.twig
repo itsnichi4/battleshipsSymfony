@@ -1,0 +1,392 @@
+{# templates/single_player/index.html.twig #}
+    {% import _self as macros %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Player Game</title>
+
+    <style>
+        /* Add CSS styling here as needed */
+        table {
+            border-collapse: collapse;
+        }
+
+        td {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #000;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer; /* Add cursor style to indicate clickable cells */
+        }
+
+        /* Customize cell styles based on the board state */
+        .empty {
+            background-color: #eee;
+        }
+
+        .ship {
+            background-color: #3498db;
+        }
+
+        .hit {
+            background-color: #e74c3c;
+        }
+
+        .miss {
+            background-color: #2ecc71;
+        }
+    </style>
+</head>
+<body>
+    <h1>Single Player Game</h1>
+
+    <p>{{ message }}</p>
+
+    {% if game %}
+        <p>Game ID: {{ game.id }}</p>
+        <p>Status: {{ game.status }}</p>
+        <p>Player 1: {{ game.player1.username }}</p>
+        <p>Player 2: {% if game.player2 %}{{ game.player2.username }}{% else %}AI{% endif %}</p>
+<p class="hitsMissesPlayer1">Hits/Misses Player 1: {{ game.hitsPlayer1 ?? 0 }}/{{ game.missesPlayer1 ?? 0 }}</p>
+<p class="hitsMissesPlayer2">Hits/Misses Player 2: {{ game.hitsPlayer2 ?? 0 }}/{{ game.missesPlayer2 ?? 0 }}</p>
+
+        <p>Created At: {{ game.createdAt|date('Y-m-d H:i:s') }}</p>
+
+        {# Display the player 1 board #}
+        <h2>Player 1 Board</h2>
+        {{ macros.renderBoard(game.player1BoardState, 'player1') }}
+
+        {# Display the player 2 board #}
+        <h2>Player 2 Board</h2>
+        {{ macros.renderBoard(game.player2BoardState, 'player2') }}
+
+        {# Add more game-related information as needed #}
+    {% endif %}
+
+    {# Add links or buttons to navigate to different parts of the game #}
+<script>
+let playerCanMove = true;
+let aiMove = false
+    let game = {{ game|json_encode|raw }};
+    let hitsPlayer1 = 0;
+    let hitsPlayer2 = 0;
+    let missesPlayer1 = 0;
+    let missesPlayer2 = 0;
+    let ships = [
+        { type: 'carrier', size: 5 },
+        { type: 'battleship', size: 4 },
+        { type: 'cruiser', size: 3 },
+        { type: 'submarine', size: 3 },
+        { type: 'destroyer', size: 2 }
+    ];
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded event fired.');
+    placeShips('player1');
+    placeShips('player2');
+    game.currentPlayer = 'player1'; // Initialize current player
+    
+});
+
+document.querySelectorAll('td').forEach(function(cell) {
+    cell.addEventListener('click', function() {
+        if (playerCanMove) {
+            let cellId = this.id;
+            if (isCurrentPlayerTurn() && isOpponentBoard(cellId)) {
+                handleCellClick(cellId);
+
+
+            } else {
+                 
+                console.log('Invalid move! Not your turn or not opponent\'s board.');
+            }
+        } else {
+           
+            console.log('Wait for AI to finish.');
+        }
+    });
+});
+
+
+
+
+function isOpponentBoard(cellId) {
+    // Check if the clicked cell belongs to the opponent's board
+    let currentPlayer = getCurrentPlayer();
+    let opponentPrefix = (currentPlayer === 'player1') ? 'player2' : 'player1';
+    return cellId.startsWith('cell_' + opponentPrefix);
+}
+
+function isCurrentPlayerTurn() {
+    // Check if it's the current player's turn based on the game state
+    return game.currentPlayer === getCurrentPlayer(); 
+}
+
+function getCurrentPlayer() {
+
+    return (game.currentPlayer === 'player1') ? 'player1' : 'player2';
+}
+
+function isAiTurn() {
+    return getCurrentPlayer() === 'player2';
+}
+
+
+
+function handleCellClick(cellId) {
+    let cell = document.getElementById(cellId);
+
+    if (cell.classList.contains('hit') || cell.classList.contains('miss')) {
+        console.log('Cell already clicked!');
+        return;
+    }
+
+    if (!isCurrentPlayerTurn() || !isOpponentBoard(cellId)) {
+        console.log('Not your turn or AI is playing. Please wait.');
+        return;
+    }
+
+    switch (true) {
+        case cell.classList.contains('ship'):
+            cell.classList.add('hit');
+            console.log('Hit!');
+            updateHits(game.currentPlayer, function() {
+                if (!checkWin()) {
+                    console.log('Player\'s turn continues.');
+                    playerCanMove = true;
+                } else {
+                    console.log(getCurrentPlayer() + ' wins!');
+                    // Optionally, reset the game or redirect to another page.
+                }
+            });
+            break;
+
+        default:
+            cell.classList.add('miss');
+            console.log('Miss!');
+            updateMisses(game.currentPlayer);
+            break;
+    }
+}
+
+
+
+
+
+function playAI() {
+    // Disable player's move during AI's turn
+    playerCanMove = false;
+
+    setTimeout(function() {
+        if (isCurrentPlayerTurn() && isAiTurn()) {
+            console.log('AI is making a move...');
+
+            let randomRow, randomCol;
+
+            do {
+                randomRow = Math.floor(Math.random() * 10);
+                randomCol = Math.floor(Math.random() * 10);
+
+            } while (document.getElementById('cell_player1_' + randomRow + '_' + randomCol).classList.contains('hit') || document.getElementById('cell_player1_' + randomRow + '_' + randomCol).classList.contains('miss'));
+
+            console.log('AI selected cell: cell_player1_' + randomRow + '_' + randomCol);
+
+            // Simulate the AI's move with a delay
+            setTimeout(function() {
+                handleCellClick('cell_player1_' + randomRow + '_' + randomCol);
+
+                // Re-enable player's move after AI's turn
+                setTimeout(function() {
+                    playerCanMove = true;
+
+                    // Check if it's still the AI's turn (for edge cases)
+                    if (isAiTurn()) {
+                        playAI();
+                    }
+                }, 750);
+            }, 1000);
+        }
+    }, 1750); // 1-second delay before AI starts making a move
+}
+
+
+
+
+
+function updateMisses(player) {
+    // Update misses count based on the clicked cell
+    console.log('Updating misses for player:', player);
+
+    switch (player) {
+        case 'player1':
+            missesPlayer1 += 1;
+            break;
+        case 'player2':
+            missesPlayer2 += 1;
+            break;
+        default:
+            console.log('Invalid player:', player);
+            return;
+    }
+
+    // Update text content
+    updateTextContent();
+
+    // Switch turns after updating misses
+    switchTurns();
+    playAI();
+}
+
+function switchTurns() {
+                    
+    // Update the game state to switch turns
+    game.currentPlayer = (game.currentPlayer === 'player1') ? 'player2' : 'player1';
+
+    // Check for a win after switching turns
+
+}
+
+function checkWin() {
+    let currentPlayer = getCurrentPlayer();
+    let opponent = (currentPlayer === 'player1') ? 'player2' : 'player1';
+    let opponentShips = document.querySelectorAll('.ship[id^=cell_' + opponent + ']');
+
+    // Check if all opponent's ships are hit
+    return Array.from(opponentShips).every(shipCell => shipCell.classList.contains('hit')) &&
+           Array.from(opponentShips).length > 0; // Ensure there are ships present
+}
+
+
+
+
+function isCurrentPlayerTurn() {
+    console.log(`getcurrentplayer:`, getCurrentPlayer() )
+    // Check if it's the current player's turn based on the game state
+    return game.currentPlayer === getCurrentPlayer();
+
+}
+
+function updateHits(player, callback) {
+    // Update hits count based on the clicked cell
+    console.log('Updating hits for player:', player);
+
+    switch (player) {
+        case 'player1':
+            hitsPlayer1 += 1;
+            break;
+        case 'player2':
+            hitsPlayer2 += 1;
+            break;
+        default:
+            console.log('Invalid player:', player);
+            return;
+    }
+
+    // Update text content
+    updateTextContent();
+
+    // Check for a win after updating hits
+    if (!checkWin()) {
+        // Execute the callback (e.g., switch turns and start AI moves)
+        if (callback && typeof callback === 'function') {
+            callback();
+        }
+    } else {
+        // Perform any actions when a player wins (e.g., display a message)
+        console.log(getCurrentPlayer() + ' wins!');
+        // Optionally, you can reset the game or redirect to another page.
+    }
+}
+
+
+function updateTextContent() {
+    // Update text content of HTML elements
+    document.querySelector('.hitsMissesPlayer1').textContent = `Hits/Misses Player 1: ${hitsPlayer1}/${missesPlayer1}`;
+    document.querySelector('.hitsMissesPlayer2').textContent = `Hits/Misses Player 2: ${hitsPlayer2}/${missesPlayer2}`;
+}
+
+function getCurrentPlayer() {
+    return (game.currentPlayer === 'player1') ? 'player1' : 'player2';
+}
+
+
+    function placeShips(player) {
+        ships.forEach(function(ship) {
+            placeShipRandomly(ship.size, player);
+        });
+    }
+
+    function placeShipRandomly(size, player) {
+        let orientation = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+        let shipPlaced = false;
+
+        while (!shipPlaced) {
+            let randomRow = Math.floor(Math.random() * 10);
+            let randomCol = Math.floor(Math.random() * 10);
+
+            if (canPlaceShip(randomRow, randomCol, size, orientation, player)) {
+                placeShip(randomRow, randomCol, size, orientation, player);
+                shipPlaced = true;
+            }
+        }
+    }
+
+    function canPlaceShip(row, col, size, orientation, player) {
+        // Check if the ship can be placed at the specified position
+        if (orientation === 'horizontal' && col + size <= 10) {
+            for (let i = 0; i < size; i++) {
+                if (document.querySelector('#cell_' + player + '_' + row + '_' + (col + i)).classList.contains('ship')) {
+                    return false;
+                }
+            }
+            return true;
+        } else if (orientation === 'vertical' && row + size <= 10) {
+            for (let i = 0; i < size; i++) {
+                if (document.querySelector('#cell_' + player + '_' + (row + i) + '_' + col).classList.contains('ship')) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    function placeShip(row, col, size, orientation, player) {
+        // Place the ship on the board
+        if (orientation === 'horizontal') {
+            for (let i = 0; i < size; i++) {
+                document.querySelector('#cell_' + player + '_' + row + '_' + (col + i)).classList.add('ship');
+            }
+        } else if (orientation === 'vertical') {
+            for (let i = 0; i < size; i++) {
+                document.querySelector('#cell_' + player + '_' + (row + i) + '_' + col).classList.add('ship');
+            }
+        }
+    }
+
+
+
+</script>
+
+
+    {# Add a custom Twig function to render the game board #}
+    {% macro renderBoard(boardState, player) %}
+        <table>
+            {% for rowIndex, row in boardState %}
+                <tr>
+                    {% for colIndex, cell in row %}
+                        {# Assuming rowIndex and colIndex are 0-based indices #}
+                        <td id="cell_{{ player }}_{{ rowIndex }}_{{ colIndex }}" class="{{ cell }}">{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endmacro %}
+</body>
+</html>

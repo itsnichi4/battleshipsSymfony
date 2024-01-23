@@ -1,0 +1,35 @@
+security:
+    encoders:
+        App\Entity\User:
+            algorithm: plaintext
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: username # Change to your actual property used for authentication (e.g., username)
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            lazy: true
+            anonymous: ~
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                default_target_path: /main-menu # Add this line to set the default target path
+                require_previous_session: false
+            logout:
+                path: app_logout
+                target: app_login
+
+            # Add other firewall configurations as needed
+
+    access_control:
+    - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/main-menu, roles: ROLE_USER }
+    # Add other access control rules as needed
+

@@ -1,0 +1,22 @@
+app_login:
+    path: /login
+    controller: App\Controller\LoginController::login
+    methods: [GET, POST]
+
+app_logout:
+    path: /logout
+    controller: App\Controller\LoginController::logout
+    methods: [GET]
+
+app_main_menu:
+    path: /main-menu
+    controller: App\Controller\LoginController::mainMenu
+
+app_single_player:
+    path: /single-player
+    controller: App\Controller\YourController::singlePlayer
+
+app_multiplayer:
+    path: /multiplayer
+    controller: App\Controller\MultiplayerController::multiplayer
+

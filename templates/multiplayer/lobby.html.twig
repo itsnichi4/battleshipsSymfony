@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multiplayer Lobby</title>
+</head>
+<body>
+    <h1>Welcome to the Multiplayer Lobby, {{ username }}!</h1>
+
+    <p>Players online:</p>
+    <ul>
+        {% if availablePlayers is not empty %}
+            {% for player in availablePlayers %}
+                <li>{{ player.username }}</li>
+            {% endfor %}
+        {% else %}
+            <li>No available players</li>
+        {% endif %}
+    </ul>
+
+    <p>Currently in matchmaking:</p>
+    <ul>
+        {% if matches is not empty %}
+            {% for match in matches %}
+                <li>{{ match.player1.username }} vs {{ match.player2.username }}</li>
+            {% endfor %}
+        {% else %}
+            <li>No ongoing matches</li>
+        {% endif %}
+    </ul>
+
+    <form action="{{ path('app_find_match') }}" method="post">
+        <button type="submit">Find Match</button>
+    </form>
+
+    {# Dump availablePlayers for debugging #}
+    {{ dump(availablePlayers) }}
+
+    {# Add more content or styling as needed #}
+</body>
+</html>
