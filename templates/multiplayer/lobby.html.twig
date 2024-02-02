@@ -32,8 +32,16 @@
         <button type="submit">Find Match</button>
     </form>
 
+    <form action="{{ path('app_stop_finding_match') }}" method="post">
+    <button type="submit">Stop Finding Match</button>
+</form>
+
     {# Dump availablePlayers for debugging #}
-    {{ dump(availablePlayers) }}
+{# Dump availablePlayers for debugging #}
+{{ dump(availablePlayers) }}
+
+
+
 
     {# Add more content or styling as needed #}
 </body>

@@ -5,6 +5,8 @@ namespace App\Service;
 use App\Repository\MatchmakingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
+use App\Entity\Game;
+
 class MatchmakingService
 {
     private $matchmakingRepository;
@@ -25,12 +27,25 @@ class MatchmakingService
     {
         // Implement logic to create a match between two players
         // You may need to update the status of players in the Matchmaking entity.
-        $player1->setIsAvailable(false);
-        $player2->setIsAvailable(false);
 
-        $this->entityManager->persist($player1);
-        $this->entityManager->persist($player2);
-        $this->entityManager->flush();
+    // Create a new Game entity
+    $game = new Game();
+    $game->setPlayer1($player1);
+    $game->setPlayer2($player2);
+
+    $game->setStatus("pending"); // or whatever default status you want
+
+
+    // Set players' availability to false
+    $player1->setIsAvailable(false);
+    $player2->setIsAvailable(false);
+
+    // Persist and flush entities
+    $this->entityManager->persist($game);
+    $this->entityManager->persist($player1);
+    $this->entityManager->persist($player2);
+    $this->entityManager->flush();
+
     }
 
     public function findMatch(User $user)
@@ -61,6 +76,7 @@ class MatchmakingService
         // No match found
         return false;
     }
+
 
 
     /**

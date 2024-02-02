@@ -77,4 +77,24 @@ class MultiplayerController extends AbstractController
         // Redirect back to the multiplayer lobby or render a response
         return $this->redirectToRoute('app_multiplayer');
     }
+
+    /**
+     * @Route("/stop-finding-match", name="app_stop_finding_match")
+     */
+    public function stopFindingMatch(EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Set the user as not available for matchmaking
+        $user->setIsAvailable(false);
+
+        $entityManager->flush();
+
+        // Redirect back to the multiplayer lobby or render a response
+        return $this->redirectToRoute('app_multiplayer');
+    }
 }

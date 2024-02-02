@@ -232,11 +232,19 @@ class Game
     private function initializeEmptyBoard(): array
     {
         $board = [];
-        for ($i = 0; $i < 10; $i++) {
-            $board[] = array_fill(0, 10, '.');
+    
+        $letters = range('A', 'J');
+    
+        for ($row = 0; $row < 10; $row++) {
+            for ($col = 1; $col <= 10; $col++) {
+                $board[$letters[$row]][$col] = '.';
+            }
         }
+    
         return $board;
     }
+    
+    
 
     public function __construct()
     {

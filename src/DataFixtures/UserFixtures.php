@@ -29,6 +29,15 @@ class UserFixtures extends Fixture
         $user2->setRoles(['ROLE_USER']);
         $manager->persist($user2);
 
+        $user3 = new User();
+        $user3->setUsername($user1->getUsername() . '3'); // Append '3' to the username
+        $user3->setEmail($user1->getEmail() . '3'); // Use the same email as the first user
+        $user3->setPassword($user1->getPassword()); // Use the same password as the first user
+        $user3->setCreatedAt(new \DateTimeImmutable());
+        $user3->setUpdatedAt(new \DateTimeImmutable());
+        $user3->setRoles(['ROLE_USER']);
+        $manager->persist($user3);
+
         $manager->flush();
     }
 }
