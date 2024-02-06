@@ -6,16 +6,28 @@ use App\Repository\MatchmakingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use App\Entity\Game;
+use App\Message\GameStatusUpdateMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
+use App\Repository\GameRepository;
 
 class MatchmakingService
 {
     private $matchmakingRepository;
     private $entityManager;
+    private $messageBus;
+    private $gameRepository;
 
-    public function __construct(MatchmakingRepository $matchmakingRepository, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        MatchmakingRepository $matchmakingRepository,
+        EntityManagerInterface $entityManager,
+        MessageBusInterface $messageBus,
+        GameRepository $gameRepository
+    ) {
         $this->matchmakingRepository = $matchmakingRepository;
         $this->entityManager = $entityManager;
+        $this->messageBus = $messageBus;
+        $this->gameRepository = $gameRepository;
     }
 
     public function findAvailablePlayers()
@@ -25,68 +37,45 @@ class MatchmakingService
 
     public function createMatch($player1, $player2)
     {
-        // Implement logic to create a match between two players
-        // You may need to update the status of players in the Matchmaking entity.
+        // Create a new Game entity
+        $game = new Game();
+        $game->setExpiresAt(new \DateTime('+9 seconds')); // Set expiration time to 1 seconds from now
+        $game->setPlayer1($player1);
+        $game->setPlayer2($player2);
 
-    // Create a new Game entity
-    $game = new Game();
-    $game->setPlayer1($player1);
-    $game->setPlayer2($player2);
+        $game->setStatus("pending"); // or whatever default status you want
 
-    $game->setStatus("pending"); // or whatever default status you want
+        // Set players' availability to false
+        $player1->setIsAvailable(false);
+        $player2->setIsAvailable(false);
 
-
-    // Set players' availability to false
-    $player1->setIsAvailable(false);
-    $player2->setIsAvailable(false);
-
-    // Persist and flush entities
-    $this->entityManager->persist($game);
-    $this->entityManager->persist($player1);
-    $this->entityManager->persist($player2);
-    $this->entityManager->flush();
-
+        // Persist and flush entities
+        $this->entityManager->persist($game);
+        $this->entityManager->persist($player1);
+        $this->entityManager->persist($player2);
+        $this->entityManager->flush();
     }
+        public function updateMatchStatus(int $gameId)
+        {
+            $game = $this->entityManager->getRepository(Game::class)->find($gameId);
+    
+            if ($game && $game->getStatus() === 'pending') {
+                $game->setStatus('finished');
+    
+                // Calculate the delay timestamp
+                $delayTimestamp = $game->getExpiresAt()->getTimestamp();
+    
+                // Create a DelayStamp with the calculated delay timestamp
+                $delayStamp = new DelayStamp($delayTimestamp);
+    
+                // Dispatch the message with the game ID for status update and the DelayStamp
+                $this->messageBus->dispatch(new GameStatusUpdateMessage($game->getId()), [$delayStamp]);
+            }
+            }
 
-    public function findMatch(User $user)
-    {
-        // Get the list of available players, excluding the current user
-        $availablePlayers = $this->findAvailablePlayers();
-        $otherPlayers = array_diff($availablePlayers, [$user]);
+            public function fetchPendingMatches()
+            {
+                return $this->gameRepository->findPendingMatches();
+            }
 
-        // Check if there are available players other than the current user
-        if (!empty($otherPlayers)) {
-            // Found a match, select the first available player
-            $opponent = reset($otherPlayers);
-
-            // Get the User entities for the matched players
-            $player1 = $this->entityManager->getRepository(User::class)->find($user->getId());
-            $player2 = $this->entityManager->getRepository(User::class)->find($opponent->getId());
-
-            // Create a match between the players
-            $this->createMatch($player1, $player2);
-
-            // Remove players from available list (you may need to implement this method in your repository)
-            $this->matchmakingRepository->removeAvailablePlayer($player1);
-            $this->matchmakingRepository->removeAvailablePlayer($player2);
-
-            return true; // Match found
-        }
-
-        // No match found
-        return false;
-    }
-
-
-
-    /**
-     * Get ongoing matches.
-     *
-     * @return array
-     */
-    public function getOngoingMatches(): array
-    {
-        // Implement your logic to retrieve ongoing matches
-        return $this->matchmakingRepository->findBy(['status' => 'ongoing']);
-    }
 }

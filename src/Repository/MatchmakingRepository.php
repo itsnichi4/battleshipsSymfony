@@ -13,20 +13,6 @@ class MatchmakingRepository extends ServiceEntityRepository
         parent::__construct($registry, Matchmaking::class);
     }
 
-    /**
-     * Find available players for matchmaking.
-     *
-     * @return Matchmaking[] Returns an array of Matchmaking objects
-     */
-    public function findAvailablePlayers(): array
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.status = :status')
-            ->setParameter('status', 'available')
-            ->getQuery()
-            ->getResult();
-    }
-
     public function add(Matchmaking $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

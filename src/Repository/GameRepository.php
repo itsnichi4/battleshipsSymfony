@@ -21,6 +21,15 @@ class GameRepository extends ServiceEntityRepository
         parent::__construct($registry, Game::class);
     }
 
+    public function findPendingMatches()
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.status = :status')
+            ->setParameter('status', 'pending')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function add(Game $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

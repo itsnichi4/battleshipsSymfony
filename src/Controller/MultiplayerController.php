@@ -8,6 +8,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Service\MatchmakingService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UserRepository; // Import the UserRepository
+use App\Entity\User;
+
 
 class MultiplayerController extends AbstractController
 {
@@ -38,15 +40,19 @@ class MultiplayerController extends AbstractController
         $availablePlayers = $this->userRepository->findAvailableUsers();
 
         if (count($availablePlayers) >= 2) {
-            $opponent = array_shift($availablePlayers);
-            $this->matchmakingService->createMatch($user, $opponent);
-        } else {
-            // Update user status or perform other actions
-        }
+            
+            $opponent = $availablePlayers[1];
+            // if($user.getId())
+           if ( $user !== $opponent ) {
+            
+  
+
+            $this->matchmakingService->createMatch($user, $opponent);}
+        } 
 
         // Get information about available players and ongoing matches
-        $availablePlayers = $this->userRepository->findAvailableUsers();
-        $matches = $this->matchmakingService->getOngoingMatches();
+        
+        $matches = $this->matchmakingService->fetchPendingMatches();
 
 
         return $this->render('multiplayer/lobby.html.twig', [

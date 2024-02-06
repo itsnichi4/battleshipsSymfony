@@ -17,6 +17,13 @@ services:
         arguments:
             $matchmakingRepository: '@App\Repository\MatchmakingRepository'
             $entityManager: '@doctrine.orm.entity_manager'
+            $messageBus: '@messenger.default_bus' # Inject the default message bus
+            $gameRepository: '@App\Repository\GameRepository'
+
+
+    App\MessageHandler\GameStatusUpdateMessageHandler:
+        tags:
+            - { name: messenger.message_handler }
             
     # default configuration for services in *this* file
     _defaults:

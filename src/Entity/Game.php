@@ -80,6 +80,10 @@ class Game
     private $player2Moves;
 
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $expiresAt;
 
     public function getId(): ?int
     {
@@ -229,22 +233,45 @@ class Game
         return $this;
     }
 
+    public function getExpiresAt(): ?\DateTimeInterface
+    {
+        return $this->expiresAt;
+    }
+    
+    public function setExpiresAt(\DateTimeInterface $expiresAt): self
+    {
+        $this->expiresAt = $expiresAt;
+
+        // Call checkExpiration method when setting expiresAt
+        $this->checkExpiration();
+
+        return $this;
+    }
+
+    private function checkExpiration(): void
+    {
+        if ($this->status === 'pending' && new \DateTime() >= $this->expiresAt) {
+            // The game has expired, update the status to "finished"
+            $this->status = 'finished';
+        }
+    }
+
     private function initializeEmptyBoard(): array
     {
         $board = [];
-    
+
         $letters = range('A', 'J');
-    
+
         for ($row = 0; $row < 10; $row++) {
             for ($col = 1; $col <= 10; $col++) {
                 $board[$letters[$row]][$col] = '.';
             }
         }
-    
+
         return $board;
     }
-    
-    
+
+
 
     public function __construct()
     {
@@ -253,13 +280,25 @@ class Game
         $this->hitsPlayer2 = 0;
         $this->missesPlayer2 = 0;
         $this->createdAt = new \DateTime(); // Assuming you want the creation date to be set to the current date and time by default
-
+    
+        // Set expiration time to 30 seconds from the creation date
+        $expiresAt = new \DateTime();
+        $expiresAt->modify('+30 seconds');
+        $this->expiresAt = $expiresAt;
+    
+        // Set the initial status to "pending"
+        $this->status = 'pending';
+    
         // Assuming your board state is an empty 10x10 board represented by an array of arrays
         $this->player1BoardState = $this->initializeEmptyBoard();
         $this->player2BoardState = $this->initializeEmptyBoard();
-
+    
         $this->player1Moves = [];
         $this->player2Moves = [];
+    
+        // Check if the game has expired during construction
+        $this->checkExpiration();
     }
 
+    
 }
