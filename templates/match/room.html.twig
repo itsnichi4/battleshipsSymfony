@@ -1,0 +1,134 @@
+{# templates/match/room.html.twig #}
+Welcome to Match {{ matchId }}
+Player 1: {{ player1.getUserIdentifier() }}
+Player 2: {{ player2.getUserIdentifier() }}
+
+<style>
+    /* Your CSS styles go here */
+    .board {
+        border-collapse: collapse;
+    }
+
+    .cell {
+        border: 1px solid #000;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .ship {
+        background-color: gray;
+        /* Add any other styling for the ship cells */
+    }
+</style>
+
+<table class="board">
+    {% for row, rowData in player1Board %}
+        <tr>
+            {% for column, cell in rowData %}
+                {# Check if the cell has a ship and add the 'ship' class if true #}
+                {% set cellClass = cell.ship ? 'ship' : '' %}
+
+                <td class="cell {{ cellClass }}" id="{{ row }}{{ column }}" data-ship="{{ cell.ship }}">
+                    Row {{ row }} Column {{ column }}: {{ cell.status }}
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const socket = new WebSocket('ws://localhost:8080');
+
+        socket.onopen = (event) => {
+            console.log('WebSocket connection opened:', event);
+        };
+        socket.onmessage = (event) => {
+            if (isValidJSON(event.data)) {
+                try {
+                    const response = JSON.parse(event.data);
+                    const { type, data } = response;
+
+                    if (type === 'move_notification') {
+                        const { playerId, row, column, status } = data;
+                        const player = (playerId === '{{ app.user.id }}') ? 'user' : 'opponent';
+                        updateBoardUI(player, { row, column, status });
+                    }
+
+                    console.log('Server response:', response);
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                }
+            } else {
+                console.log('Received non-JSON message:', event.data);
+            }
+        };
+
+
+
+        socket.onclose = (event) => {
+            console.log('WebSocket connection closed:', event);
+        };
+
+        document.querySelectorAll('.cell').forEach(function (cell) {
+            cell.addEventListener('click', function () {
+                const userId = '{{ app.user.id }}';
+                const gameId = '{{ matchId }}';  // Assuming matchId is the gameId
+
+                const payload = {
+                    playerId: userId,  // Assuming playerId is the same as userId
+                    gameId: gameId,
+                    row: this.id.charAt(0),
+                    column: this.id.substring(1),
+                    status: 'clicked'
+                };
+
+                socket.send(JSON.stringify(payload));
+
+
+            });
+        });
+
+        function isValidJSON(str) {
+            try {
+                JSON.parse(str);
+                return true;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        function updateBoardUI(player, boardState) {
+            // Update the UI based on the received board state for the specified player
+            if (boardState && typeof boardState === 'object') {
+                updateBoard(player, boardState);
+                console.log(`AAAAAAAAAAAA`, boardState);
+            } else {
+                console.error(`Invalid ${player} boardState received:`, boardState);
+            }
+        }
+
+
+
+
+        function updateBoard(player, cellData) {
+            const row = cellData.row;
+            const column = cellData.column;
+            const cellId = `${row}${column}`;
+            const cell = document.getElementById(cellId);
+
+            if (cell) {
+                const cellStatus = cellData.status;
+                cell.innerHTML = `Row ${row} Column ${column}: ${cellStatus}`;
+                cell.classList.add('clicked');
+            } else {
+                console.error(`Cell ${cellId} not found.`);
+            }
+        }
+
+
+
+
+
+    });
+</script>

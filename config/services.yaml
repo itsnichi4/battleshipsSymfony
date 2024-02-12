@@ -24,7 +24,7 @@ services:
         arguments:
             $tokenStorage: '@security.token_storage'
             $logger: '@logger'
-            
+
     App\Service\GameLogicService:
         arguments:
             $webSocketConnectionRepository: '@App\Repository\WebsocketConnectionRepository'
@@ -35,7 +35,7 @@ services:
     App\Handler\YourWebSocketHandler:
         tags:
             - { name: 'web_socket.handler' }
-            
+
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
