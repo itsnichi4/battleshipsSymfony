@@ -11,13 +11,17 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 use App\Service\MatchmakingService;
 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 class LoginController extends AbstractController
 {
     private $matchmakingService;
+    private $session;
 
-    public function __construct(MatchmakingService $matchmakingService)
+    public function __construct(MatchmakingService $matchmakingService, SessionInterface $session)
     {
         $this->matchmakingService = $matchmakingService;
+        $this->session = $session;
     }
 
     /**
@@ -28,12 +32,10 @@ class LoginController extends AbstractController
         if ($this->getUser()) {
             return $this->redirectToRoute('app_main_menu');
         }
-        // Get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
 
-        // Last username entered by the user
+        $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
-        //dd($error,$lastUsername);
+
         return $this->render('login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
@@ -47,28 +49,23 @@ class LoginController extends AbstractController
     {
         // This controller will not be executed,
         // as the route is handled by the security system.
-        // You can add a return statement with a redirect if needed.
     }
 
-    /**
-     * @Route("/main-menu", name="app_main_menu")
-     */
-    public function mainMenu(): Response
-    {
-        // Get the user from the security system
-        $user = $this->getUser();
+/**
+ * @Route("/main-menu", name="app_main_menu")
+ */
+public function mainMenu(): Response
+{
+    $user = $this->getUser();
 
-        if (!$user) {
-            // Handle the case where the user is not logged in
-            // Redirect to the login page or do something else
-            return $this->redirectToRoute('app_login');
-        }
-
-        // Render the main menu
-        return $this->render('main_menu.html.twig', [
-            'username' => $user->getUserIdentifier(),
-        ]);
+    if (!$user) {
+        return $this->redirectToRoute('app_login');
     }
 
+    $username = $user->getUserIdentifier();
 
+    return $this->render('main_menu.html.twig', [
+        'username' => $username,
+    ]);
+}
 }

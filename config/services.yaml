@@ -12,18 +12,29 @@ services:
         autowire: true
 
     Symfony\Component\Security\Core\User\UserInterface: '@App\Entity\User'
-    
+
     App\Service\MatchmakingService:
         arguments:
             $matchmakingRepository: '@App\Repository\MatchmakingRepository'
             $entityManager: '@doctrine.orm.entity_manager'
             $messageBus: '@messenger.default_bus' # Inject the default message bus
-            $gameRepository: '@App\Repository\GameRepository'
+            $gameRepository: '@App\Repository/GameRepository'
 
+    App\Command\BattleshipsWebsocketCommand:
+        arguments:
+            $tokenStorage: '@security.token_storage'
+            $logger: '@logger'
+            
+    App\Service\GameLogicService:
+        arguments:
+            $webSocketConnectionRepository: '@App\Repository\WebsocketConnectionRepository'
 
     App\MessageHandler\GameStatusUpdateMessageHandler:
         tags:
             - { name: messenger.message_handler }
+    App\Handler\YourWebSocketHandler:
+        tags:
+            - { name: 'web_socket.handler' }
             
     # default configuration for services in *this* file
     _defaults:

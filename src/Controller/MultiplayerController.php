@@ -8,7 +8,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Service\MatchmakingService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UserRepository; // Import the UserRepository
-use App\Entity\User;
+use App\Entity\Game;
+
 
 
 class MultiplayerController extends AbstractController
@@ -22,67 +23,77 @@ class MultiplayerController extends AbstractController
         $this->userRepository = $userRepository;
     }
 
-    /**
-     * @Route("/multiplayer", name="app_multiplayer")
-     */
-    public function multiplayer(): Response
-    {
-        // Get the user from the security system
-        $user = $this->getUser();
+/**
+ * @Route("/multiplayer", name="app_multiplayer")
+ */
+public function multiplayer(EntityManagerInterface $entityManager): Response
+{
+    // Get the user from the security system
+    $user = $this->getUser();
 
-        if (!$user) {
-            // Handle the case where the user is not logged in
-            // Redirect to the login page or do something else
-            return $this->redirectToRoute('app_login');
-        }
-
-        // Check for available players and create matches
-        $availablePlayers = $this->userRepository->findAvailableUsers();
-
-        if (count($availablePlayers) >= 2) {
-            
-            $opponent = $availablePlayers[1];
-            // if($user.getId())
-           if ( $user !== $opponent ) {
-            
-  
-
-            $this->matchmakingService->createMatch($user, $opponent);}
-        } 
-
-        // Get information about available players and ongoing matches
-        
-        $matches = $this->matchmakingService->fetchPendingMatches();
-
-
-        return $this->render('multiplayer/lobby.html.twig', [
-            'username' => $user->getUserIdentifier(),
-            'availablePlayers' => $availablePlayers,
-            'matches' => $matches,
-        ]);
+    if (!$user) {
+        // Handle the case where the user is not logged in
+        // Redirect to the login page or do something else
+        return $this->redirectToRoute('app_login');
     }
 
-    /**
-     * @Route("/find-match", name="app_find_match")
-     */
-    public function findMatch(EntityManagerInterface $entityManager): Response
-    {
-        $user = $this->getUser();
+    // Check for available players and create matches
+    $availablePlayers = $this->userRepository->findAvailableUsers();
 
-        if (!$user) {
-            // Handle the case where the user is not logged in
-            // Redirect to the login page or do something else
-            return $this->redirectToRoute('app_login');
+    if (count($availablePlayers) >= 2) {
+        $opponent = $availablePlayers[1];
+
+        if ($user !== $opponent) {
+            $this->matchmakingService->createMatch($user, $opponent);
         }
-
-        // Set the user as available for matchmaking
-        $user->setIsAvailable(true);
-
-        $entityManager->flush(); // Use the injected EntityManager
-
-        // Redirect back to the multiplayer lobby or render a response
-        return $this->redirectToRoute('app_multiplayer');
     }
+
+    // Get information about available players and ongoing matches
+    // Fetch pending matches for the current user
+    $pendingMatches = $entityManager->getRepository(Game::class)->findPendingMatchesForUser($user->getId());
+
+    return $this->render('multiplayer/lobby.html.twig', [
+        'username' => $user->getUserIdentifier(),
+        'availablePlayers' => $availablePlayers,
+        'matches' => $pendingMatches,
+    ]);
+}
+
+
+
+// MultiplayerController.php
+
+/**
+ * @Route("/find-match", name="app_find_match")
+ */
+public function findMatch(EntityManagerInterface $entityManager): Response
+{
+    $user = $this->getUser();
+
+    if (!$user) {
+        // Handle the case where the user is not logged in
+        // Redirect to the login page or do something else
+        return $this->redirectToRoute('app_login');
+    }
+
+    // Set the user as available for matchmaking
+    $user->setIsAvailable(true);
+
+    $entityManager->flush(); // Use the injected EntityManager
+
+    // Fetch pending matches for the current user
+    $match = $this->matchmakingService->fetchPendingMatches($user->getId());
+
+    if ($match) {
+        return $this->redirectToRoute('app_match_room', ['id' => $match->getId()]);
+
+    }
+
+    // Redirect back to the multiplayer lobby if no match is found
+    return $this->redirectToRoute('app_multiplayer');
+}
+
+
 
     /**
      * @Route("/stop-finding-match", name="app_stop_finding_match")

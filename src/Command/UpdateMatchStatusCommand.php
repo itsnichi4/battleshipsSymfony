@@ -42,7 +42,9 @@ class UpdateMatchStatusCommand extends Command
             $this->matchmakingService->updateMatchStatus($matchId);
 
             // Dispatch a message with a delay
-            $this->messageBus->dispatch(new GameStatusUpdateMessage($matchId), ['delay' => 30000]);
+            $delay = 10; // seconds
+            $message = new GameStatusUpdateMessage($matchId, $delay);
+            $this->messageBus->dispatch($message);
         }
 
         return Command::SUCCESS;

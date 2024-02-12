@@ -30,6 +30,35 @@ class GameRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findPendingMatchesForUser(int $userId): array
+    {
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.status = :status')
+            ->andWhere('g.player1 = :userId OR g.player2 = :userId')
+            ->setParameter('status', 'pending')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findOngoingMatchForUser(int $userId): ?Game
+    {
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.status = :status')
+            ->andWhere('(g.player1 = :userId OR g.player2 = :userId) AND g.expiresAt > :currentDate')
+            ->setParameter('status', 'ongoing')
+            ->setParameter('userId', $userId)
+            ->setParameter('currentDate', new \DateTime())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function updateMatchStatus(Game $game): void
+    {
+        $this->getEntityManager()->persist($game);
+        $this->getEntityManager()->flush();
+    }
+
     public function add(Game $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

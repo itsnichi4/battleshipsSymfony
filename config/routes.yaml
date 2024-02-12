@@ -20,3 +20,16 @@ app_multiplayer:
     path: /multiplayer
     controller: App\Controller\MultiplayerController::multiplayer
 
+app_match_room:
+    path: '/match/{id}/room'
+    controller: App\Controller\MatchController::room
+    requirements:
+        id: '\d+'
+
+app_match_click:
+    path: /match/{id}/click
+    controller: App\Controller\MatchController::click
+    methods: ['POST']
+    requirements:
+        id: \d+
+

@@ -11,6 +11,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 use App\Repository\GameRepository;
 
+
 class MatchmakingService
 {
     private $matchmakingRepository;
@@ -55,23 +56,29 @@ class MatchmakingService
         $this->entityManager->persist($player2);
         $this->entityManager->flush();
     }
-        public function updateMatchStatus(int $gameId)
-        {
-            $game = $this->entityManager->getRepository(Game::class)->find($gameId);
+    public function updateMatchStatus(int $gameId)
+
+    {
+        $game = $this->entityManager->getRepository(Game::class)->find($gameId);
     
-            if ($game && $game->getStatus() === 'pending') {
-                $game->setStatus('finished');
+        if ($game && $game->getStatus() === 'pending') {
+            $game->setStatus('finished');
+            
+            // Persist changes to the database
+            $this->gameRepository->updateMatchStatus($game);
     
-                // Calculate the delay timestamp
-                $delayTimestamp = $game->getExpiresAt()->getTimestamp();
+            // Calculate the delay in seconds (adjust as needed)
+            $delay = 10; // seconds
     
-                // Create a DelayStamp with the calculated delay timestamp
-                $delayStamp = new DelayStamp($delayTimestamp);
+            // Dispatch the message with the game ID and delay
+            $this->messageBus->dispatch(new GameStatusUpdateMessage($game->getId(), $delay));
+        }
+    }
     
-                // Dispatch the message with the game ID for status update and the DelayStamp
-                $this->messageBus->dispatch(new GameStatusUpdateMessage($game->getId()), [$delayStamp]);
-            }
-            }
+    public function findOngoingMatch(User $user): ?Game
+    {
+        return $this->gameRepository->findOngoingMatchForUser($user->getId());
+    }
 
             public function fetchPendingMatches()
             {

@@ -65,3 +65,142 @@
 [06-Feb-2024 13:27:06] NOTICE: fpm is running, pid 658
 [06-Feb-2024 13:27:06] NOTICE: ready to handle connections
 [06-Feb-2024 13:27:06] NOTICE: systemd monitor interval set to 10000ms
+[06-Feb-2024 23:11:49] NOTICE: Terminating ...
+[06-Feb-2024 23:11:49] NOTICE: exiting, bye-bye!
+[07-Feb-2024 14:41:28] NOTICE: fpm is running, pid 305
+[07-Feb-2024 14:41:28] NOTICE: ready to handle connections
+[07-Feb-2024 14:41:28] NOTICE: systemd monitor interval set to 10000ms
+[07-Feb-2024 16:04:57] NOTICE: fpm is running, pid 104
+[07-Feb-2024 16:04:57] NOTICE: ready to handle connections
+[07-Feb-2024 16:04:57] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 10:59:37] NOTICE: fpm is running, pid 950
+[08-Feb-2024 10:59:37] NOTICE: ready to handle connections
+[08-Feb-2024 10:59:37] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 11:26:41] NOTICE: Terminating ...
+[08-Feb-2024 11:26:41] NOTICE: exiting, bye-bye!
+[08-Feb-2024 11:26:46] NOTICE: fpm is running, pid 6034
+[08-Feb-2024 11:26:46] NOTICE: ready to handle connections
+[08-Feb-2024 11:26:46] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 11:27:17] NOTICE: Terminating ...
+[08-Feb-2024 11:27:17] NOTICE: exiting, bye-bye!
+[08-Feb-2024 11:28:31] NOTICE: fpm is running, pid 6523
+[08-Feb-2024 11:28:31] NOTICE: ready to handle connections
+[08-Feb-2024 11:28:31] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 18:47:37] NOTICE: Terminating ...
+[08-Feb-2024 18:47:37] NOTICE: exiting, bye-bye!
+[08-Feb-2024 18:48:03] NOTICE: fpm is running, pid 5276
+[08-Feb-2024 18:48:03] NOTICE: ready to handle connections
+[08-Feb-2024 18:48:03] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 18:52:22] NOTICE: Terminating ...
+[08-Feb-2024 18:52:22] NOTICE: exiting, bye-bye!
+[08-Feb-2024 18:52:30] NOTICE: fpm is running, pid 5499
+[08-Feb-2024 18:52:30] NOTICE: ready to handle connections
+[08-Feb-2024 18:52:30] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 18:53:29] NOTICE: Terminating ...
+[08-Feb-2024 18:53:29] NOTICE: exiting, bye-bye!
+[08-Feb-2024 18:53:43] NOTICE: fpm is running, pid 5690
+[08-Feb-2024 18:53:43] NOTICE: ready to handle connections
+[08-Feb-2024 18:53:43] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 18:57:06] NOTICE: Terminating ...
+[08-Feb-2024 18:57:06] NOTICE: exiting, bye-bye!
+[08-Feb-2024 18:57:11] NOTICE: fpm is running, pid 5906
+[08-Feb-2024 18:57:11] NOTICE: ready to handle connections
+[08-Feb-2024 18:57:11] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 19:01:39] NOTICE: Terminating ...
+[08-Feb-2024 19:01:39] NOTICE: exiting, bye-bye!
+[08-Feb-2024 19:01:44] NOTICE: fpm is running, pid 6141
+[08-Feb-2024 19:01:44] NOTICE: ready to handle connections
+[08-Feb-2024 19:01:44] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 19:04:19] NOTICE: Terminating ...
+[08-Feb-2024 19:04:19] NOTICE: exiting, bye-bye!
+[08-Feb-2024 19:04:24] NOTICE: fpm is running, pid 6383
+[08-Feb-2024 19:04:24] NOTICE: ready to handle connections
+[08-Feb-2024 19:04:24] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 19:14:44] NOTICE: Terminating ...
+[08-Feb-2024 19:14:44] NOTICE: exiting, bye-bye!
+[08-Feb-2024 19:14:50] NOTICE: fpm is running, pid 6609
+[08-Feb-2024 19:14:50] NOTICE: ready to handle connections
+[08-Feb-2024 19:14:50] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 19:18:41] NOTICE: Terminating ...
+[08-Feb-2024 19:18:41] NOTICE: exiting, bye-bye!
+[08-Feb-2024 19:18:46] NOTICE: fpm is running, pid 6820
+[08-Feb-2024 19:18:46] NOTICE: ready to handle connections
+[08-Feb-2024 19:18:46] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 19:27:53] NOTICE: Terminating ...
+[08-Feb-2024 19:27:53] NOTICE: exiting, bye-bye!
+[08-Feb-2024 19:27:58] NOTICE: fpm is running, pid 7183
+[08-Feb-2024 19:27:58] NOTICE: ready to handle connections
+[08-Feb-2024 19:27:58] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 19:30:05] NOTICE: Terminating ...
+[08-Feb-2024 19:30:05] NOTICE: exiting, bye-bye!
+[08-Feb-2024 19:30:16] NOTICE: fpm is running, pid 7390
+[08-Feb-2024 19:30:16] NOTICE: ready to handle connections
+[08-Feb-2024 19:30:16] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 19:41:27] NOTICE: Terminating ...
+[08-Feb-2024 19:41:27] NOTICE: exiting, bye-bye!
+[08-Feb-2024 19:41:35] NOTICE: fpm is running, pid 7825
+[08-Feb-2024 19:41:35] NOTICE: ready to handle connections
+[08-Feb-2024 19:41:35] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 19:52:32] NOTICE: Terminating ...
+[08-Feb-2024 19:52:32] NOTICE: exiting, bye-bye!
+[08-Feb-2024 19:52:38] NOTICE: fpm is running, pid 8090
+[08-Feb-2024 19:52:38] NOTICE: ready to handle connections
+[08-Feb-2024 19:52:38] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 19:55:21] NOTICE: Terminating ...
+[08-Feb-2024 19:55:21] NOTICE: exiting, bye-bye!
+[08-Feb-2024 19:55:34] NOTICE: fpm is running, pid 8329
+[08-Feb-2024 19:55:34] NOTICE: ready to handle connections
+[08-Feb-2024 19:55:34] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 20:06:06] NOTICE: Terminating ...
+[08-Feb-2024 20:06:06] NOTICE: exiting, bye-bye!
+[08-Feb-2024 20:06:13] NOTICE: fpm is running, pid 8714
+[08-Feb-2024 20:06:13] NOTICE: ready to handle connections
+[08-Feb-2024 20:06:13] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 20:07:59] NOTICE: Terminating ...
+[08-Feb-2024 20:07:59] NOTICE: exiting, bye-bye!
+[08-Feb-2024 20:08:05] NOTICE: fpm is running, pid 8968
+[08-Feb-2024 20:08:05] NOTICE: ready to handle connections
+[08-Feb-2024 20:08:05] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 20:12:58] NOTICE: Terminating ...
+[08-Feb-2024 20:12:58] NOTICE: exiting, bye-bye!
+[08-Feb-2024 20:13:03] NOTICE: fpm is running, pid 9259
+[08-Feb-2024 20:13:03] NOTICE: ready to handle connections
+[08-Feb-2024 20:13:03] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 20:20:41] NOTICE: Terminating ...
+[08-Feb-2024 20:20:41] NOTICE: exiting, bye-bye!
+[08-Feb-2024 20:20:48] NOTICE: fpm is running, pid 9559
+[08-Feb-2024 20:20:48] NOTICE: ready to handle connections
+[08-Feb-2024 20:20:48] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 20:52:49] NOTICE: Terminating ...
+[08-Feb-2024 20:52:49] NOTICE: exiting, bye-bye!
+[08-Feb-2024 20:52:55] NOTICE: fpm is running, pid 11552
+[08-Feb-2024 20:52:55] NOTICE: ready to handle connections
+[08-Feb-2024 20:52:55] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 21:42:43] NOTICE: Terminating ...
+[08-Feb-2024 21:42:43] NOTICE: exiting, bye-bye!
+[08-Feb-2024 21:42:49] NOTICE: fpm is running, pid 12078
+[08-Feb-2024 21:42:49] NOTICE: ready to handle connections
+[08-Feb-2024 21:42:49] NOTICE: systemd monitor interval set to 10000ms
+[08-Feb-2024 21:44:20] NOTICE: Terminating ...
+[08-Feb-2024 21:44:20] NOTICE: exiting, bye-bye!
+[08-Feb-2024 21:44:31] NOTICE: fpm is running, pid 12280
+[08-Feb-2024 21:44:31] NOTICE: ready to handle connections
+[08-Feb-2024 21:44:31] NOTICE: systemd monitor interval set to 10000ms
+[12-Feb-2024 16:48:28] NOTICE: fpm is running, pid 1702
+[12-Feb-2024 16:48:28] NOTICE: ready to handle connections
+[12-Feb-2024 16:48:28] NOTICE: systemd monitor interval set to 10000ms
+[12-Feb-2024 17:14:50] NOTICE: Terminating ...
+[12-Feb-2024 17:14:50] NOTICE: exiting, bye-bye!
+[12-Feb-2024 17:14:56] NOTICE: fpm is running, pid 4994
+[12-Feb-2024 17:14:56] NOTICE: ready to handle connections
+[12-Feb-2024 17:14:56] NOTICE: systemd monitor interval set to 10000ms
+[12-Feb-2024 17:19:23] NOTICE: Terminating ...
+[12-Feb-2024 17:19:23] NOTICE: exiting, bye-bye!
+[12-Feb-2024 17:19:30] NOTICE: fpm is running, pid 5490
+[12-Feb-2024 17:19:30] NOTICE: ready to handle connections
+[12-Feb-2024 17:19:30] NOTICE: systemd monitor interval set to 10000ms
+[12-Feb-2024 17:39:24] NOTICE: Terminating ...
+[12-Feb-2024 17:39:24] NOTICE: exiting, bye-bye!
+[12-Feb-2024 17:39:33] NOTICE: fpm is running, pid 7041
+[12-Feb-2024 17:39:33] NOTICE: ready to handle connections
+[12-Feb-2024 17:39:33] NOTICE: systemd monitor interval set to 10000ms
