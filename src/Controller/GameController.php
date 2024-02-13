@@ -43,7 +43,6 @@ class GameController extends AbstractController
                 $this->notifyOpponent($opponent, $matchId, $coordinate);
                 $game->addMove($userId, $coordinate);
                 $game->updateBoardState($userId, $coordinate);
-
                 $response = [
                     'message' => 'Move successful',
                     'user_board' => $user->getBoardState(),

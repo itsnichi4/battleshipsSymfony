@@ -34,6 +34,19 @@ Player 2: {{ player2.getUserIdentifier() }}
             {% endfor %}
         </tr>
     {% endfor %}
+    <table class="board2">
+    {% for row, rowData in player2Board %}
+        <tr>
+            {% for column, cell in rowData %}
+                {# Check if the cell has a ship and add the 'ship' class if true #}
+                {% set cellClass = cell.ship ? 'ship' : '' %}
+
+                <td class="cell {{ cellClass }}" id="{{ row }}{{ column }}" data-ship="{{ cell.ship }}">
+                    Row {{ row }} Column {{ column }}: {{ cell.status }}
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
 </table>
 
 <script>
